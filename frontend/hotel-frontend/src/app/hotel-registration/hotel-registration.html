@@ -1,0 +1,59 @@
+<div class="form-container">
+  <h2>Register Your Hotel</h2>
+
+  <div *ngIf="successMessage" class="success-message">
+    {{ successMessage }}
+    <div *ngIf="siteUrl">
+      <a [href]="siteUrl" target="_blank">View your new hotel website</a>
+    </div>
+  </div>
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+  <div *ngIf="loading">Submitting...</div>
+
+  <form [formGroup]="hotelForm" (ngSubmit)="onSubmit()" enctype="multipart/form-data">
+    <div>
+      <label>Hotel Name:</label>
+      <input formControlName="name" required />
+      <div *ngIf="hotelForm.get('name')?.invalid && hotelForm.get('name')?.touched" class="validation-message">
+        Name is required.
+      </div>
+    </div>
+    <div>
+      <label>Logo:</label>
+      <input type="file" (change)="onFileChange($event)" />
+    </div>
+    <div>
+      <label>Email:</label>
+      <input formControlName="email" type="email" required />
+      <div *ngIf="hotelForm.get('email')?.invalid && hotelForm.get('email')?.touched" class="validation-message">
+        Valid email is required.
+      </div>
+    </div>
+    <div>
+      <label>Phone:</label>
+      <input formControlName="phone" required />
+      <div *ngIf="hotelForm.get('phone')?.invalid && hotelForm.get('phone')?.touched" class="validation-message">
+        Phone is required.
+      </div>
+    </div>
+    <div>
+      <label>Address:</label>
+      <input formControlName="address" required />
+      <div *ngIf="hotelForm.get('address')?.invalid && hotelForm.get('address')?.touched" class="validation-message">
+        Address is required.
+      </div>
+    </div>
+    <div>
+      <label>Theme:</label>
+      <select formControlName="theme" required>
+        <option *ngFor="let theme of themes" [value]="theme">{{ theme }}</option>
+      </select>
+      <div *ngIf="hotelForm.get('theme')?.invalid && hotelForm.get('theme')?.touched" class="validation-message">
+        Theme is required.
+      </div>
+    </div>
+    <button type="submit" [disabled]="hotelForm.invalid || loading">Submit</button>
+  </form>
+</div>

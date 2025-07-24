@@ -17,6 +17,10 @@ mongoose.connect(process.env.MONGODB_URI, {
 app.use(cors());
 app.use(express.json());
 
+// Serve static hotel sites
+const path = require('path');
+app.use('/sites', express.static(path.join(__dirname, '../sites')));
+
 const PORT = process.env.PORT || 5000;
 
 app.get('/', (req, res) => {

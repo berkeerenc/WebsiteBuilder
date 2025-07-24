@@ -1,7 +1,8 @@
+import { renderApplication } from '@angular/platform-server';
 import { bootstrapApplication } from '@angular/platform-browser';
-import { App } from './app/app';
-import { config } from './app/app.config.server';
+import { AppComponent } from './app/app';
+import { appConfig } from './app/app.config';
 
-const bootstrap = () => bootstrapApplication(App, config);
-
-export default bootstrap;
+export default renderApplication(() => bootstrapApplication(AppComponent, appConfig), {
+  document: '<!DOCTYPE html><html><head></head><body><app-root></app-root></body></html>'
+});
