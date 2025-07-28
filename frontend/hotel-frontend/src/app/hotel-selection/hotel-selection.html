@@ -1,0 +1,157 @@
+<div class="container">
+  <h1>Hotel Website Builder</h1>
+  
+  <!-- Success/Error Messages -->
+  <div *ngIf="successMessage" class="success-message">
+    {{ successMessage }}
+    <div *ngIf="generatedSiteUrl">
+      <a [href]="generatedSiteUrl" target="_blank" class="site-link">View Generated Website</a>
+    </div>
+  </div>
+  
+  <div *ngIf="errorMessage" class="error-message">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Hotel Selection -->
+  <div class="section">
+    <div class="section-header">
+      <h2>Step 1: Select a Hotel</h2>
+      <button class="add-hotel-btn" (click)="showAddHotelForm = true">
+        ➕ Add New Hotel
+      </button>
+    </div>
+    
+    <!-- Add Hotel Form (Hidden by default) -->
+    <div *ngIf="showAddHotelForm" class="add-hotel-form">
+      <h3>Add New Hotel</h3>
+      <form [formGroup]="addHotelForm" (ngSubmit)="addNewHotel()">
+        <div class="form-row">
+          <div class="form-group">
+            <label for="hotelName">Hotel Name *</label>
+            <input id="hotelName" type="text" formControlName="name" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="hotelDescription">Description</label>
+            <textarea id="hotelDescription" formControlName="description" class="form-control"></textarea>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="hotelEmail">Email</label>
+            <input id="hotelEmail" type="email" formControlName="email" class="form-control">
+          </div>
+          <div class="form-group">
+            <label for="hotelPhone">Phone</label>
+            <input id="hotelPhone" type="text" formControlName="phone" class="form-control">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="hotelAddress">Address</label>
+          <input id="hotelAddress" type="text" formControlName="address" class="form-control">
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="btn-primary" [disabled]="addHotelForm.invalid || addingHotel">
+            {{ addingHotel ? 'Adding...' : 'Add Hotel' }}
+          </button>
+          <button type="button" class="btn-secondary" (click)="showAddHotelForm = false">
+            Cancel
+          </button>
+        </div>
+      </form>
+    </div>
+    
+    <div class="hotel-grid">
+      <div 
+        *ngFor="let hotel of hotels; trackBy: trackByHotelId" 
+        class="hotel-card"
+        [class.selected]="selectedHotel?._id === hotel._id"
+        (click)="selectHotel(hotel)"
+      >
+        <div class="hotel-logo" *ngIf="hotel.logoUrl">
+          <img [src]="'http://localhost:5000' + hotel.logoUrl" [alt]="hotel.name + ' logo'">
+        </div>
+        <div class="hotel-info">
+          <h3>{{ hotel.name }}</h3>
+          <p *ngIf="hotel.description">{{ hotel.description }}</p>
+          <p *ngIf="hotel.contact && hotel.contact.phone">📞 {{ hotel.contact.phone }}</p>
+          <p *ngIf="hotel.contact && hotel.contact.address">📍 {{ hotel.contact.address }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Site Creation Method -->
+  <div class="section" *ngIf="selectedHotel">
+    <h2>Step 2: Choose Creation Method</h2>
+    <div class="method-selector">
+      <button 
+        class="method-btn"
+        [class.active]="creationMethod === 'template'"
+        (click)="setCreationMethod('template')"
+      >
+        🎨 Use Template
+      </button>
+      <button 
+        class="method-btn"
+        [class.active]="creationMethod === 'url'"
+        (click)="setCreationMethod('url')"
+      >
+        🌐 Clone Website
+      </button>
+    </div>
+  </div>
+
+  <!-- Template Selection -->
+  <div class="section" *ngIf="selectedHotel && creationMethod === 'template'">
+    <h2>Step 3: Select Theme</h2>
+    <form [formGroup]="siteCreationForm">
+      <div class="theme-grid">
+        <div 
+          *ngFor="let theme of themes" 
+          class="theme-card"
+          [class.selected]="siteCreationForm.get('theme')?.value === theme"
+          (click)="siteCreationForm.get('theme')?.setValue(theme)"
+        >
+          <div class="theme-preview">
+            <div class="preview-header"></div>
+            <div class="preview-content"></div>
+          </div>
+          <h4>{{ theme | titlecase }}</h4>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- URL Input -->
+  <div class="section" *ngIf="selectedHotel && creationMethod === 'url'">
+    <h2>Step 3: Enter Website URL</h2>
+    <form [formGroup]="siteCreationForm">
+      <div class="form-group">
+        <label for="targetUrl">Website URL to Clone:</label>
+        <input 
+          id="targetUrl"
+          type="url" 
+          formControlName="targetUrl"
+          placeholder="https://example.com"
+          class="form-control"
+        >
+        <div *ngIf="siteCreationForm.get('targetUrl')?.invalid && siteCreationForm.get('targetUrl')?.touched" class="validation-error">
+          Please enter a valid URL starting with http:// or https://
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <!-- Create Site Button -->
+  <div class="section" *ngIf="selectedHotel">
+    <button 
+      class="create-btn"
+      [disabled]="siteCreationForm.invalid || loading"
+      (click)="createSite()"
+    >
+      <span *ngIf="!loading">🚀 Create Website</span>
+      <span *ngIf="loading">⏳ Creating...</span>
+    </button>
+  </div>
+</div> 

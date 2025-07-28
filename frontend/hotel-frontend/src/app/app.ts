@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
-import { HotelRegistrationComponent } from './hotel-registration/hotel-registration';
+import { HotelSelectionComponent } from './hotel-selection/hotel-selection';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HotelRegistrationComponent],
+  imports: [HotelSelectionComponent],
   templateUrl: './app.html',
   styleUrls: ['./app.css']
 })

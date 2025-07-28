@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{name}} - Hotel</title>
+    <meta name="description" content="{{description}}">
+    <link rel="stylesheet" href="assets/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo">
+                {{#if logoUrl}}
+                <img src="logo.png" alt="{{name}} Logo" class="logo-img">
+                {{/if}}
+                <h1>{{name}}</h1>
+            </div>
+            <nav class="nav">
+                <a href="#home">Home</a>
+                <a href="#rooms">Rooms</a>
+                <a href="#amenities">Amenities</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+                <h2>{{name}}</h2>
+                <p class="hero-description">{{description}}</p>
+                <div class="hero-buttons">
+                    <a href="#rooms" class="btn btn-primary">Book Now</a>
+                    <a href="#contact" class="btn btn-secondary">Contact</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about" id="rooms">
+        <div class="container">
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Welcome to {{name}}</h3>
+                    <p>{{description}}</p>
+                    <div class="stats">
+                        {{#if roomCount}}
+                        <div class="stat">
+                            <span class="stat-number">{{roomCount}}</span>
+                            <span class="stat-label">Rooms</span>
+                        </div>
+                        {{/if}}
+                        {{#if rating}}
+                        <div class="stat">
+                            <span class="stat-number">{{rating}}</span>
+                            <span class="stat-label">Stars</span>
+                        </div>
+                        {{/if}}
+                        {{#if priceRange.min}}
+                        <div class="stat">
+                            <span class="stat-number">${{priceRange.min}}</span>
+                            <span class="stat-label">From</span>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+                <div class="about-image">
+                    <div class="image-placeholder">
+                        <i class="fas fa-hotel"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Amenities Section -->
+    {{#if amenities}}
+    <section class="amenities" id="amenities">
+        <div class="container">
+            <h3>Amenities</h3>
+            <div class="amenities-grid">
+                {{#each amenities}}
+                <div class="amenity">
+                    <span>{{this}}</span>
+                </div>
+                {{/each}}
+            </div>
+        </div>
+    </section>
+    {{/if}}
+
+    <!-- Contact Section -->
+    <section class="contact" id="contact">
+        <div class="container">
+            <h3>Contact</h3>
+            <div class="contact-grid">
+                {{#if contact.phone}}
+                <div class="contact-item">
+                    <i class="fas fa-phone"></i>
+                    <div>
+                        <h4>Phone</h4>
+                        <p>{{contact.phone}}</p>
+                    </div>
+                </div>
+                {{/if}}
+                {{#if contact.email}}
+                <div class="contact-item">
+                    <i class="fas fa-envelope"></i>
+                    <div>
+                        <h4>Email</h4>
+                        <p>{{contact.email}}</p>
+                    </div>
+                </div>
+                {{/if}}
+                {{#if contact.address}}
+                <div class="contact-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div>
+                        <h4>Address</h4>
+                        <p>{{contact.address}}</p>
+                    </div>
+                </div>
+                {{/if}}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>{{name}}</h4>
+                    <p>{{description}}</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Links</h4>
+                    <a href="#home">Home</a>
+                    <a href="#rooms">Rooms</a>
+                    <a href="#amenities">Amenities</a>
+                    <a href="#contact">Contact</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Contact</h4>
+                    {{#if contact.phone}}<p>{{contact.phone}}</p>{{/if}}
+                    {{#if contact.email}}<p>{{contact.email}}</p>{{/if}}
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 {{name}}. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/script.js"></script>
+</body>
+</html> 
