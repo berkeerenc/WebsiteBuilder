@@ -80,6 +80,9 @@ app.get('/sites/:folder/', (req, res) => {
 // Serve static files (CSS, JS, images) - MUST come after specific routes
 app.use('/sites', express.static(path.join(__dirname, '../sites')));
 
+// Serve uploaded files
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
+
 const PORT = process.env.PORT || 5000;
 
 app.get('/', (req, res) => {

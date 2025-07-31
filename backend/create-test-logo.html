@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Logo Generator</title>
+</head>
+<body>
+    <h1>Test Logo Generator</h1>
+    <p>This creates a simple test logo for testing the upload system.</p>
+    
+    <canvas id="logoCanvas" width="200" height="100" style="border: 1px solid #ccc;"></canvas>
+    <br><br>
+    <button onclick="downloadLogo()">Download Test Logo</button>
+    
+    <script>
+        const canvas = document.getElementById('logoCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        // Create a simple logo
+        ctx.fillStyle = '#007bff';
+        ctx.fillRect(0, 0, 200, 100);
+        
+        ctx.fillStyle = 'white';
+        ctx.font = 'bold 24px Arial';
+        ctx.textAlign = 'center';
+        ctx.fillText('TEST LOGO', 100, 50);
+        
+        ctx.font = '14px Arial';
+        ctx.fillText('Hotel System', 100, 75);
+        
+        function downloadLogo() {
+            const link = document.createElement('a');
+            link.download = 'test-logo.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        }
+    </script>
+</body>
+</html> 

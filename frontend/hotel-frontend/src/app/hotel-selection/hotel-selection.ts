@@ -2,6 +2,7 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { uploadConfig } from '../config/upload';
 
 interface Hotel {
   _id: string;
@@ -35,6 +36,14 @@ export class HotelSelectionComponent implements OnInit {
   successMessage = '';
   errorMessage = '';
   generatedSiteUrl = '';
+  
+  // Logo upload properties
+  logoFile: File | null = null;
+  logoPreview: string | null = null;
+  logoError: string = '';
+  
+  // Upload configuration for template
+  uploadConfig = uploadConfig;
 
   constructor(
     private fb: FormBuilder, 
@@ -84,6 +93,45 @@ export class HotelSelectionComponent implements OnInit {
     return hotel._id;
   }
 
+  onLogoSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!uploadConfig.ALLOWED_MIME_TYPES.includes(file.type)) {
+      this.logoError = uploadConfig.ERROR_MESSAGES.INVALID_FILE_TYPE;
+      return;
+    }
+
+    // Validate file size
+    if (file.size > uploadConfig.MAX_FILE_SIZE) {
+      this.logoError = uploadConfig.ERROR_MESSAGES.FILE_TOO_LARGE;
+      return;
+    }
+
+    this.logoError = '';
+    this.logoFile = file;
+
+    // Create preview
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.logoPreview = e.target.result;
+      this.cdr.detectChanges();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeLogo() {
+    this.logoFile = null;
+    this.logoPreview = null;
+    this.logoError = '';
+    // Reset file input
+    const fileInput = document.getElementById('hotelLogo') as HTMLInputElement;
+    if (fileInput) {
+      fileInput.value = '';
+    }
+  }
+
   addNewHotel() {
     if (this.addHotelForm.invalid) {
       return;
@@ -91,20 +139,32 @@ export class HotelSelectionComponent implements OnInit {
 
     this.addingHotel = true;
     this.errorMessage = '';
+    this.logoError = '';
 
-    const hotelData = {
-      ...this.addHotelForm.value,
-      theme: 'classic' // Default theme
-    };
+    // Create FormData for file upload
+    const formData = new FormData();
+    
+    // Add form fields
+    Object.keys(this.addHotelForm.value).forEach(key => {
+      formData.append(key, this.addHotelForm.value[key]);
+    });
+    
+    // Add logo file if selected
+    if (this.logoFile) {
+      formData.append('logo', this.logoFile);
+    }
 
-    console.log('Adding new hotel:', hotelData);
+    console.log('Adding new hotel with logo:', this.logoFile ? 'Yes' : 'No');
 
-    this.http.post('http://localhost:5000/api/hotels', hotelData).subscribe({
+    this.http.post('http://localhost:5000/api/hotels', formData).subscribe({
       next: (response: any) => {
         console.log('Hotel added successfully:', response);
-        this.successMessage = 'Hotel added successfully!';
+        this.successMessage = response.message || 'Hotel added successfully!';
         this.showAddHotelForm = false;
         this.addHotelForm.reset();
+        this.logoFile = null;
+        this.logoPreview = null;
+        this.logoError = '';
         this.addingHotel = false;
         this.loadHotels(); // Reload the hotel list
         this.cdr.detectChanges();
@@ -200,18 +260,11 @@ export class HotelSelectionComponent implements OnInit {
         }
       });
     } else {
-      // Use new direct clone endpoint with hotel data
+      // Use new direct clone endpoint with hotelId only
       const endpoint = 'http://localhost:5000/api/sites/clone';
       const payload = {
         url: this.siteCreationForm.value.targetUrl,
-        hotelData: {
-          name: this.selectedHotel.name,
-          phone: this.selectedHotel.contact?.phone || '',
-          address: this.selectedHotel.contact?.address || '',
-          email: this.selectedHotel.contact?.email || '',
-          description: this.selectedHotel.description || '',
-          logo: this.selectedHotel.logoUrl || ''
-        }
+        hotelId: this.selectedHotel._id
       };
 
       console.log('Making clone request to:', endpoint);

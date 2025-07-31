@@ -3,6 +3,7 @@ const WebsiteCloner = require('../services/websiteCloner');
 const path = require('path');
 const fs = require('fs-extra');
 const router = express.Router();
+const Hotel = require('../models/Hotel');
 
 /**
  * POST /api/sites/clone
@@ -31,27 +32,49 @@ const router = express.Router();
  */
 router.post('/clone', async (req, res) => {
   try {
-    const { url, hotelData } = req.body;
+    console.log('📥 Received clone request');
+    const { url, hotelId } = req.body;
 
     // Validate required fields
     if (!url) {
+      console.log('❌ Missing URL in request');
       return res.status(400).json({ 
         success: false, 
         error: 'URL is required' 
       });
     }
-
-    if (!hotelData || !hotelData.name) {
+    if (!hotelId) {
+      console.log('❌ Missing hotelId in request');
       return res.status(400).json({ 
         success: false, 
-        error: 'hotelData with name is required' 
+        error: 'hotelId is required' 
       });
     }
+
+    // Fetch hotel from DB
+    const hotel = await Hotel.findById(hotelId);
+    if (!hotel) {
+      console.log('❌ Hotel not found for id:', hotelId);
+      return res.status(404).json({ success: false, error: 'Hotel not found' });
+    }
+    console.log('Fetched hotel from DB:', hotel);
+
+    // Prepare hotelData from DB
+    const hotelData = {
+      name: hotel.name,
+      address: hotel.contact?.address || '',
+      description: hotel.description || '',
+      phone: hotel.contact?.phone || '',
+      email: hotel.contact?.email || hotel.email || '',
+      logo: hotel.logoUrl || ''
+    };
+    console.log('Prepared hotelData for cloner:', hotelData);
 
     // Validate URL format
     try {
       new URL(url);
     } catch (error) {
+      console.log('❌ Invalid URL format:', url);
       return res.status(400).json({ 
         success: false, 
         error: 'Invalid URL format' 
@@ -66,12 +89,20 @@ router.post('/clone', async (req, res) => {
     const hotelNameSlug = hotelData.name.replace(/\s+/g, '-').toLowerCase().replace(/[^a-z0-9-]/g, '');
     const outputDir = path.join(__dirname, '../../sites', `${hotelNameSlug}-cloned-${timestamp}`);
 
+    console.log(`📁 Output directory: ${outputDir}`);
+
     // Ensure the sites directory exists
     await fs.ensureDir(path.join(__dirname, '../../sites'));
+    console.log('✅ Sites directory ensured');
 
     // Clone the website using the existing WebsiteCloner service
+    console.log('🔧 Creating WebsiteCloner instance...');
     const cloner = new WebsiteCloner();
+    console.log('✅ WebsiteCloner instance created');
+
+    console.log('🚀 Starting clone process...');
     await cloner.cloneSite(url, outputDir, hotelData);
+    console.log('✅ Clone process completed');
 
     // Get the folder name for the URL
     const folderName = path.basename(outputDir);
@@ -87,17 +118,13 @@ router.post('/clone', async (req, res) => {
       folderName,
       message: 'Website cloned successfully',
       originalUrl: url,
-      hotelData: {
-        name: hotelData.name,
-        phone: hotelData.phone,
-        address: hotelData.address,
-        email: hotelData.email
-      },
+      hotelData,
       note: 'The cloned website maintains the original design while replacing hotel information with your provided data.'
     });
 
   } catch (err) {
     console.error('❌ Error cloning website:', err);
+    console.error('📋 Stack trace:', err.stack);
     res.status(500).json({ 
       success: false,
       error: 'Failed to clone website: ' + err.message 

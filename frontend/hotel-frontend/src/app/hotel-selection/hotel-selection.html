@@ -50,6 +50,34 @@
           <label for="hotelAddress">Address</label>
           <input id="hotelAddress" type="text" formControlName="address" class="form-control">
         </div>
+        
+        <!-- Logo Upload Section -->
+        <div class="form-group">
+          <label for="hotelLogo">Hotel Logo</label>
+          <div class="logo-upload-container">
+            <input 
+              id="hotelLogo" 
+              type="file" 
+              accept="image/*"
+              (change)="onLogoSelected($event)"
+              class="logo-input"
+              #logoInput
+            >
+            <div class="logo-preview" *ngIf="logoPreview">
+              <img [src]="logoPreview" [alt]="'Logo preview'" class="preview-image">
+              <button type="button" class="remove-logo-btn" (click)="removeLogo()">✕</button>
+            </div>
+            <div class="logo-placeholder" *ngIf="!logoPreview">
+              <div class="upload-icon">📷</div>
+              <p>{{ uploadConfig.UI_TEXT.UPLOAD_PLACEHOLDER }}</p>
+              <p class="upload-hint">{{ uploadConfig.UI_TEXT.UPLOAD_HINT }}</p>
+            </div>
+          </div>
+          <div class="validation-error" *ngIf="logoError">
+            {{ logoError }}
+          </div>
+        </div>
+        
         <div class="form-actions">
           <button type="submit" class="btn-primary" [disabled]="addHotelForm.invalid || addingHotel">
             {{ addingHotel ? 'Adding...' : 'Add Hotel' }}
@@ -68,8 +96,11 @@
         [class.selected]="selectedHotel?._id === hotel._id"
         (click)="selectHotel(hotel)"
       >
-        <div class="hotel-logo" *ngIf="hotel.logoUrl">
-          <img [src]="'http://localhost:5000' + hotel.logoUrl" [alt]="hotel.name + ' logo'">
+        <div class="hotel-logo">
+          <img *ngIf="hotel.logoUrl" [src]="'http://localhost:5000' + hotel.logoUrl" [alt]="hotel.name + ' logo'">
+          <div *ngIf="!hotel.logoUrl" class="default-logo">
+            🏨
+          </div>
         </div>
         <div class="hotel-info">
           <h3>{{ hotel.name }}</h3>

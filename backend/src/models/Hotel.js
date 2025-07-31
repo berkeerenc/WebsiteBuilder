@@ -18,7 +18,7 @@ const hotelSchema = new mongoose.Schema({
     min: Number,
     max: Number
   },
-  theme: { type: String, required: true },
+  theme: { type: String, default: 'modern' },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now }
 });
