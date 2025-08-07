@@ -42,12 +42,12 @@ class WebsiteCloner {
     async cloneSite(url, outputDir, hotelData = {}) {
         // Set a timeout for the entire clone process
         const cloneTimeout = setTimeout(() => {
-            console.error('⏰ Clone process timed out after 5 minutes');
+            console.error(' Clone process timed out after 5 minutes');
             throw new Error('Clone process timed out');
         }, 300000); // 5 minutes
         
         try {
-            console.log(`🚀 Starting enhanced clone: ${url}`);
+            console.log(` Starting enhanced clone: ${url}`);
             
             // Reset debug report
             this.debugReport = {
@@ -72,7 +72,7 @@ class WebsiteCloner {
             let isFallback = false;
             
             if (!html) {
-                console.log('⚠️ Failed to fetch HTML content, creating fallback website...');
+                console.log(' Failed to fetch HTML content, creating fallback website...');
                 html = this.createFallbackHTML(hotelData);
                 isFallback = true;
             }
@@ -116,7 +116,7 @@ class WebsiteCloner {
                 ? (this.debugReport.successfulDownloads / this.debugReport.totalAssets * 100).toFixed(2)
                 : 0;
             
-            console.log(`📊 Clone Statistics:`);
+            console.log(` Clone Statistics:`);
             console.log(`   Total Assets: ${this.debugReport.totalAssets}`);
             console.log(`   Successful: ${this.debugReport.successfulDownloads}`);
             console.log(`   Failed: ${this.debugReport.failedDownloads}`);
@@ -127,9 +127,9 @@ class WebsiteCloner {
             clearTimeout(cloneTimeout);
             
             if (isFallback) {
-                console.log(`⚠️ Created fallback website to: ${outputDir}`);
+                console.log(` Created fallback website to: ${outputDir}`);
             } else {
-                console.log(`✅ Website cloned successfully to: ${outputDir}`);
+                console.log(` Website cloned successfully to: ${outputDir}`);
             }
             
             return {
@@ -142,7 +142,7 @@ class WebsiteCloner {
             // Clear the timeout since we encountered an error
             clearTimeout(cloneTimeout);
             
-            console.error('❌ Error cloning website:', error.message);
+            console.error(' Error cloning website:', error.message);
             this.debugReport.errors.push({
                 type: 'clone_error',
                 message: error.message,
@@ -158,11 +158,11 @@ class WebsiteCloner {
     async getEnhancedHTML(url) {
         try {
             // First try static capture
-            console.log('📄 Attempting static HTML capture...');
+            console.log(' Attempting static HTML capture...');
             let html = await this.getStaticHTML(url);
             
             if (html) {
-                console.log('✅ Static HTML capture successful');
+                console.log('Static HTML capture successful');
                 return html;
             }
             
@@ -171,7 +171,7 @@ class WebsiteCloner {
             return await this.getEnhancedDynamicHTML(url);
             
         } catch (error) {
-            console.error('❌ Enhanced HTML capture failed:', error.message);
+            console.error(' Enhanced HTML capture failed:', error.message);
             return null;
         }
     }
@@ -210,7 +210,7 @@ class WebsiteCloner {
     async getEnhancedDynamicHTML(url) {
         let browser;
         try {
-            console.log('🚀 Launching Puppeteer browser...');
+            console.log(' Launching Puppeteer browser...');
             browser = await puppeteer.launch({
                 headless: true,
                 args: [
@@ -237,47 +237,47 @@ class WebsiteCloner {
             // Enhanced browser setup
             await this.setupEnhancedPage(page);
             
-            console.log('🌐 Navigating to:', url);
+            console.log(' Navigating to:', url);
             
             // Navigate with enhanced waiting
-            console.log('🌐 Navigating to URL...');
+            console.log(' Navigating to URL...');
             await page.goto(url, { 
                 waitUntil: 'networkidle0', 
                 timeout: this.options.maxWaitTime 
             });
-            console.log('✅ Navigation completed');
+            console.log(' Navigation completed');
             
             // Enhanced content capture with multiple strategies
-            console.log('📄 Starting enhanced content capture...');
+            console.log(' Starting enhanced content capture...');
             await this.performEnhancedContentCapture(page);
-            console.log('✅ Enhanced content capture completed');
+            console.log(' Enhanced content capture completed');
             
             // Final wait for any remaining dynamic content
-            console.log('⏳ Waiting for final content...');
+            console.log(' Waiting for final content...');
             await this.waitForFinalContent(page);
-            console.log('✅ Final content wait completed');
+            console.log(' Final content wait completed');
             
             // Capture the final HTML
             const html = await page.content();
             
             // Save debug screenshot
             await page.screenshot({path: 'debug-enhanced.png', fullPage: true});
-            console.log('📸 Enhanced debug screenshot saved');
+            console.log(' Enhanced debug screenshot saved');
             
             return html;
             
         } catch (error) {
-            console.error('❌ Enhanced dynamic HTML capture failed:', error.message);
-            console.error('📋 Stack trace:', error.stack);
+            console.error(' Enhanced dynamic HTML capture failed:', error.message);
+            console.error(' Stack trace:', error.stack);
             return null;
         } finally {
             if (browser) {
                 try {
-                    console.log('🔒 Closing browser in finally block...');
+                    console.log(' Closing browser in finally block...');
                     await browser.close();
-                    console.log('✅ Browser closed successfully');
+                    console.log(' Browser closed successfully');
                 } catch (closeError) {
-                    console.error('❌ Failed to close browser:', closeError.message);
+                    console.error(' Failed to close browser:', closeError.message);
                 }
             }
         }
@@ -314,12 +314,12 @@ class WebsiteCloner {
         
         // Enhanced request interception for debugging
         page.on('request', request => {
-            console.log('🌐 Request:', request.url());
+            console.log(' Request:', request.url());
         });
         
         page.on('response', response => {
             if (response.status() >= 400) {
-                console.log('⚠️ Response error:', response.url(), response.status());
+                console.log(' Response error:', response.url(), response.status());
             }
         });
     }
@@ -328,7 +328,7 @@ class WebsiteCloner {
      * Perform enhanced content capture with multiple strategies
      */
     async performEnhancedContentCapture(page) {
-        console.log('🔄 Starting enhanced content capture...');
+        console.log(' Starting enhanced content capture...');
         
         // Strategy 1: Multiple scroll cycles with different patterns
         await this.performScrollCycles(page);
@@ -350,10 +350,10 @@ class WebsiteCloner {
      * Perform multiple scroll cycles with different patterns
      */
     async performScrollCycles(page) {
-        console.log('📜 Performing enhanced scroll cycles...');
+        console.log('Performing enhanced scroll cycles...');
         
         for (let cycle = 1; cycle <= this.options.scrollCycles; cycle++) {
-            console.log(`📜 Scroll cycle ${cycle}/${this.options.scrollCycles}`);
+            console.log(`Scroll cycle ${cycle}/${this.options.scrollCycles}`);
             
             // Scroll to bottom in steps
             await this.scrollToBottom(page, 500, 300);
@@ -398,7 +398,7 @@ class WebsiteCloner {
      * Wait for specific content to appear
      */
     async waitForSpecificContent(page) {
-        console.log('🔍 Waiting for specific content...');
+        console.log('Waiting for specific content...');
         
         const contentSelectors = [
             '.footer', '.site-footer', '#footer', 'footer', '[class*="footer"]', '[id*="footer"]',
@@ -412,7 +412,7 @@ class WebsiteCloner {
         for (const selector of contentSelectors) {
             try {
                 await page.waitForSelector(selector, { timeout: 5000 });
-                console.log(`✅ Found content: ${selector}`);
+                console.log(`Found content: ${selector}`);
             } catch (e) {
                 // Ignore timeout errors
             }
@@ -423,7 +423,7 @@ class WebsiteCloner {
      * Simulate user interactions to trigger dynamic content
      */
     async simulateUserInteractions(page) {
-        console.log('🖱️ Simulating user interactions...');
+        console.log(' Simulating user interactions...');
         
         // Mouse movements and clicks
         await page.mouse.move(100, 100);
@@ -451,7 +451,7 @@ class WebsiteCloner {
      * Trigger lazy loading mechanisms
      */
     async triggerLazyLoading(page) {
-        console.log('🔄 Triggering lazy loading...');
+        console.log(' Triggering lazy loading...');
         
         // Trigger Intersection Observer
         await page.evaluate(() => {
@@ -478,9 +478,9 @@ class WebsiteCloner {
                 idleTime: 3000,
                 timeout: 15000
             });
-            console.log('✅ Network is idle');
+            console.log(' Network is idle');
         } catch (e) {
-            console.log('⚠️ Network did not go idle, continuing...');
+            console.log(' Network did not go idle, continuing...');
         }
     }
 
@@ -488,7 +488,7 @@ class WebsiteCloner {
      * Wait for final content to load
      */
     async waitForFinalContent(page) {
-        console.log('⏳ Waiting for final content...');
+        console.log(' Waiting for final content...');
         
         // Wait for any remaining AJAX calls
         await page.waitForTimeout(3000);
@@ -504,9 +504,9 @@ class WebsiteCloner {
                     document.querySelector(selector)
                 );
             }, { timeout: 10000 });
-            console.log('✅ All loading indicators cleared');
+            console.log(' All loading indicators cleared');
         } catch (e) {
-            console.log('⚠️ Some loading indicators may still be present');
+            console.log(' Some loading indicators may still be present');
         }
     }
 
@@ -555,13 +555,13 @@ class WebsiteCloner {
             // Set viewport
             await page.setViewport({ width: 1920, height: 1080 });
             
-            console.log('🌐 Navigating to:', url);
+            console.log(' Navigating to:', url);
             
             // Use networkidle0 for navigation to wait for all network requests to finish
             await page.goto(url, { waitUntil: 'networkidle0', timeout: 60000 });
             
             // --- AGGRESSIVE CONTENT CAPTURE: Multiple scroll cycles ---
-            console.log('🔄 Starting aggressive content capture...');
+            console.log(' Starting aggressive content capture...');
             
             // First scroll cycle
             const scrollStep = 500;
@@ -593,42 +593,42 @@ class WebsiteCloner {
             await page.waitForTimeout(3000);
             
             // --- NEW: Wait for specific content to appear ---
-            console.log('🔍 Waiting for specific content...');
+            console.log(' Waiting for specific content...');
             
             // Wait for footer or any content that should be at the bottom
             try {
                 await page.waitForSelector('.footer, .site-footer, #footer, footer, [class*="footer"], [id*="footer"]', {timeout: 10000});
-                console.log('✅ Footer selector found!');
+                console.log(' Footer selector found!');
             } catch (e) {
-                console.log('⚠️ Footer selector not found after waiting.');
+                console.log(' Footer selector not found after waiting.');
             }
             
             // Wait for contact information
             try {
                 await page.waitForSelector('[class*="contact"], [id*="contact"], .contact, #contact', {timeout: 5000});
-                console.log('✅ Contact information found!');
+                console.log(' Contact information found!');
             } catch (e) {
-                console.log('⚠️ Contact information not found.');
+                console.log(' Contact information not found.');
             }
             
             // Wait for social media icons
             try {
                 await page.waitForSelector('[class*="social"], [id*="social"], .social, #social', {timeout: 5000});
-                console.log('✅ Social media section found!');
+                console.log(' Social media section found!');
             } catch (e) {
-                console.log('⚠️ Social media section not found.');
+                console.log(' Social media section not found.');
             }
             
             // --- NEW: Wait for network idle again after all scrolling ---
             try {
                 await page.waitForNetworkIdle({idleTime: 3000, timeout: 15000});
-                console.log('✅ Network is idle.');
+                console.log(' Network is idle.');
             } catch (e) {
-                console.log('⚠️ Network did not go idle after scrolling.');
+                console.log(' Network did not go idle after scrolling.');
             }
             
             // --- NEW: Simulate more user interaction to trigger dynamic content ---
-            console.log('🖱️ Simulating user interactions...');
+            console.log(' Simulating user interactions...');
             await page.mouse.move(100, 100);
             await page.mouse.click(100, 100);
             await page.keyboard.press('ArrowDown');
@@ -648,11 +648,11 @@ class WebsiteCloner {
                 const footer = document.querySelector('.footer, .site-footer, #footer, footer, [class*="footer"], [id*="footer"]');
                 return footer ? footer.innerHTML : 'No footer found';
             });
-            console.log('🔍 Footer content check:', footerContent.substring(0, 200) + '...');
+            console.log(' Footer content check:', footerContent.substring(0, 200) + '...');
             
             // --- NEW: Save a full-page screenshot for debugging ---
             await page.screenshot({path: 'debug.png', fullPage: true});
-            console.log('📸 Screenshot saved as debug.png');
+            console.log(' Screenshot saved as debug.png');
             
             // --- END AGGRESSIVE CONTENT CAPTURE ---
             const html = await page.content();
@@ -673,7 +673,7 @@ class WebsiteCloner {
     async processAllAssets($, baseUrl, outputDir, hotelData = {}) {
         const baseURL = new URL(baseUrl);
         
-        console.log('📦 Starting enhanced asset processing...');
+        console.log(' Starting enhanced asset processing...');
         
         // Process all asset types with enhanced error handling
         await Promise.all([
@@ -687,7 +687,7 @@ class WebsiteCloner {
             this.processGoogleFonts($, baseURL, outputDir)
         ]);
         
-        console.log(`📦 Asset processing complete. Total: ${this.debugReport.totalAssets}, Success: ${this.debugReport.successfulDownloads}, Failed: ${this.debugReport.failedDownloads}`);
+        console.log(` Asset processing complete. Total: ${this.debugReport.totalAssets}, Success: ${this.debugReport.successfulDownloads}, Failed: ${this.debugReport.failedDownloads}`);
     }
 
     /**
@@ -728,9 +728,9 @@ class WebsiteCloner {
                     await this.downloadAsset(absoluteUrl, path.join(outputDir, localPath));
                     link.attr('href', localPath);
                     
-                    console.log(`📦 Downloaded CSS: ${fileName}`);
+                    console.log(`Downloaded CSS: ${fileName}`);
                 } catch (error) {
-                    console.log(`⚠️ Failed to download CSS: ${href}`, error.message);
+                    console.log(`Failed to download CSS: ${href}`, error.message);
                 }
             }
         }
@@ -755,9 +755,9 @@ class WebsiteCloner {
                     await this.downloadAsset(absoluteUrl, path.join(outputDir, localPath));
                     script.attr('src', localPath);
                     
-                    console.log(`📦 Downloaded JS: ${fileName}`);
+                    console.log(` Downloaded JS: ${fileName}`);
                 } catch (error) {
-                    console.log(`⚠️ Failed to download JS: ${src}`, error.message);
+                    console.log(` Failed to download JS: ${src}`, error.message);
                 }
             }
         }
@@ -777,7 +777,7 @@ class WebsiteCloner {
             if (src) {
                 if (isLogo) {
                     // For logo images, copy the hotel logo to the cloned site
-                    console.log('🖼️ Processing logo image - copying hotel logo');
+                    console.log(' Processing logo image - copying hotel logo');
                     
                     // Copy the logo file to the cloned site
                     const logoFileName = path.basename(hotelData.logo);
@@ -786,12 +786,12 @@ class WebsiteCloner {
                     
                     try {
                         await fs.copy(sourceLogoPath, destLogoPath);
-                        console.log('🖼️ Copied logo to:', destLogoPath);
+                        console.log(' Copied logo to:', destLogoPath);
                         
                         // Use relative path within the cloned site
                         img.attr('src', `images/${logoFileName}`);
                     } catch (error) {
-                        console.log('⚠️ Failed to copy logo:', error.message);
+                        console.log(' Failed to copy logo:', error.message);
                         // Fallback to absolute URL
                         img.attr('src', `http://localhost:5000${hotelData.logo}`);
                     }
@@ -805,18 +805,18 @@ class WebsiteCloner {
                         await this.downloadAsset(absoluteUrl, path.join(outputDir, localPath));
                         img.attr('src', localPath);
                         
-                        console.log(`📦 Downloaded image: ${fileName}`);
+                        console.log(` Downloaded image: ${fileName}`);
                     } catch (error) {
-                        console.log(`⚠️ Failed to download image: ${src}`, error.message);
+                        console.log(` Failed to download image: ${src}`, error.message);
                         // CRITICAL: Keep original URL as fallback - don't break the image
-                        console.log(`🔄 Keeping original image URL as fallback: ${src}`);
+                        console.log(` Keeping original image URL as fallback: ${src}`);
                         // Add more robust error logging
                         img.attr('data-download-error', error.message || 'unknown error');
                     }
                 }
             } else {
                 // Log missing src attribute
-                console.log('⚠️ Image tag missing src attribute:', img.html());
+                console.log(' Image tag missing src attribute:', img.html());
             }
         }
     }
@@ -841,9 +841,9 @@ class WebsiteCloner {
                     await this.downloadAsset(absoluteUrl, path.join(outputDir, localPath));
                     link.attr('href', localPath);
                     
-                    console.log(`📦 Downloaded font: ${fileName}`);
+                    console.log(` Downloaded font: ${fileName}`);
                 } catch (error) {
-                    console.log(`⚠️ Failed to download font: ${href}`, error.message);
+                    console.log(` Failed to download font: ${href}`, error.message);
                 }
             }
         }
@@ -872,10 +872,10 @@ class WebsiteCloner {
                     // Process background images in CSS
                     await this.processCSSBackgroundImages(path.join(outputDir, localPath), baseURL, outputDir);
                     
-                    console.log(`📦 Downloaded CSS: ${fileName}`);
+                    console.log(` Downloaded CSS: ${fileName}`);
                     this.debugReport.successfulDownloads++;
                 } catch (error) {
-                    console.log(`⚠️ Failed to download CSS: ${href}`, error.message);
+                    console.log(` Failed to download CSS: ${href}`, error.message);
                     this.debugReport.failedDownloads++;
                     this.failedAssets.push({ type: 'css', url: href, error: error.message });
                 }
@@ -903,10 +903,10 @@ class WebsiteCloner {
                     await this.downloadAsset(absoluteUrl, path.join(outputDir, localPath));
                     script.attr('src', localPath);
                     
-                    console.log(`📦 Downloaded JS: ${fileName}`);
+                    console.log(` Downloaded JS: ${fileName}`);
                     this.debugReport.successfulDownloads++;
                 } catch (error) {
-                    console.log(`⚠️ Failed to download JS: ${src}`, error.message);
+                    console.log(` Failed to download JS: ${src}`, error.message);
                     this.debugReport.failedDownloads++;
                     this.failedAssets.push({ type: 'js', url: src, error: error.message });
                 }
@@ -933,7 +933,7 @@ class WebsiteCloner {
             if (src) {
                 if (isLogo && hotelData.logo) {
                     // For logo images, copy the hotel logo to the cloned site
-                    console.log('🖼️ Processing logo image - copying hotel logo');
+                    console.log(' Processing logo image - copying hotel logo');
                     try {
                         const logoFileName = path.basename(hotelData.logo);
                         const sourceLogoPath = path.join(__dirname, '..', hotelData.logo);
@@ -944,7 +944,7 @@ class WebsiteCloner {
                         console.log(`[LOGO] ${src} → images/${logoFileName}`);
                         this.debugReport.successfulDownloads++;
                     } catch (error) {
-                        console.log('⚠️ Failed to copy logo:', error.message);
+                        console.log(' Failed to copy logo:', error.message);
                         img.attr('src', `http://localhost:5000${hotelData.logo}`);
                         this.debugReport.failedDownloads++;
                         this.failedAssets.push({ type: 'logo', url: hotelData.logo, error: error.message });
@@ -961,7 +961,7 @@ class WebsiteCloner {
                         console.log(`[IMG] ${src} → ${localPath}`);
                         this.debugReport.successfulDownloads++;
                     } catch (error) {
-                        console.log(`⚠️ Failed to download image: ${src}`, error.message);
+                        console.log(` Failed to download image: ${src}`, error.message);
                         // Keep original URL as fallback
                         img.attr('data-download-error', error.message || 'unknown error');
                         this.debugReport.failedDownloads++;
@@ -994,10 +994,10 @@ class WebsiteCloner {
                     await this.downloadAsset(absoluteUrl, path.join(outputDir, localPath));
                     link.attr('href', localPath);
                     
-                    console.log(`📦 Downloaded font: ${fileName}`);
+                    console.log(` Downloaded font: ${fileName}`);
                     this.debugReport.successfulDownloads++;
                 } catch (error) {
-                    console.log(`⚠️ Failed to download font: ${href}`, error.message);
+                    console.log(` Failed to download font: ${href}`, error.message);
                     // Keep original URL as fallback
                     this.debugReport.failedDownloads++;
                     this.failedAssets.push({ type: 'font', url: href, error: error.message });
@@ -1039,10 +1039,10 @@ class WebsiteCloner {
             );
             element.attr('style', newStyle);
             
-            console.log(`📦 Downloaded ${type}: ${fileName}`);
+            console.log(` Downloaded ${type}: ${fileName}`);
             this.debugReport.successfulDownloads++;
         } catch (error) {
-            console.log(`⚠️ Failed to download ${type}: ${url}`, error.message);
+            console.log(` Failed to download ${type}: ${url}`, error.message);
             // Keep original URL as fallback
             this.debugReport.failedDownloads++;
             this.failedAssets.push({ type, url, error: error.message });
@@ -1079,17 +1079,17 @@ class WebsiteCloner {
                     );
                     
                     await fs.writeFile(cssFilePath, newCssContent, 'utf8');
-                    console.log(`📦 Downloaded background image: ${fileName}`);
+                    console.log(` Downloaded background image: ${fileName}`);
                     this.debugReport.successfulDownloads++;
                 } catch (error) {
-                    console.log(`⚠️ Failed to download background image: ${imageUrl}`, error.message);
+                    console.log(` Failed to download background image: ${imageUrl}`, error.message);
                     // Keep original URL in CSS as fallback - don't modify the CSS file
                     this.debugReport.failedDownloads++;
                     this.failedAssets.push({ type: 'background-image', url: imageUrl, error: error.message });
                 }
             }
         } catch (error) {
-            console.log(`⚠️ Failed to process CSS background images: ${cssFilePath}`, error.message);
+            console.log(` Failed to process CSS background images: ${cssFilePath}`, error.message);
         }
     }
 
@@ -1132,7 +1132,7 @@ class WebsiteCloner {
                         
                         source.attr('srcset', newSrcset);
                     } catch (error) {
-                        console.log(`⚠️ Failed to process picture source: ${srcset}`, error.message);
+                        console.log(` Failed to process picture source: ${srcset}`, error.message);
                         this.debugReport.failedDownloads++;
                         this.failedAssets.push({ type: 'picture-source', url: srcset, error: error.message });
                     }
@@ -1152,10 +1152,10 @@ class WebsiteCloner {
                         await this.downloadAsset(absoluteUrl, path.join(outputDir, localPath));
                         img.attr('src', localPath);
                         
-                        console.log(`📦 Downloaded picture img: ${fileName}`);
+                        console.log(` Downloaded picture img: ${fileName}`);
                         this.debugReport.successfulDownloads++;
                     } catch (error) {
-                        console.log(`⚠️ Failed to download picture img: ${src}`, error.message);
+                        console.log(` Failed to download picture img: ${src}`, error.message);
                         this.debugReport.failedDownloads++;
                         this.failedAssets.push({ type: 'picture-img', url: src, error: error.message });
                     }
@@ -1194,10 +1194,10 @@ class WebsiteCloner {
                         );
                         
                         element.attr('style', newStyle);
-                        console.log(`📦 Downloaded inline background image: ${fileName}`);
+                        console.log(` Downloaded inline background image: ${fileName}`);
                         this.debugReport.successfulDownloads++;
                     } catch (error) {
-                        console.log(`⚠️ Failed to download inline background image: ${imageUrl}`, error.message);
+                        console.log(` Failed to download inline background image: ${imageUrl}`, error.message);
                         this.debugReport.failedDownloads++;
                         this.failedAssets.push({ type: 'inline-background', url: imageUrl, error: error.message });
                     }
@@ -1222,7 +1222,7 @@ class WebsiteCloner {
             
             if (href) {
                 try {
-                    console.log('🔤 Processing Google Fonts for local injection...');
+                    console.log(' Processing Google Fonts for local injection...');
                     
                     // Download the Google Fonts CSS
                     const response = await axios.get(href, {
@@ -1250,10 +1250,10 @@ class WebsiteCloner {
                             const localPath = path.join('fonts', fileName);
                             
                             await this.downloadAsset(fontUrl, path.join(outputDir, localPath));
-                            console.log(`📦 Downloaded Google Font: ${fileName}`);
+                            console.log(` Downloaded Google Font: ${fileName}`);
                             this.debugReport.successfulDownloads++;
                         } catch (error) {
-                            console.log(`⚠️ Failed to download Google Font: ${fontUrl}`, error.message);
+                            console.log(` Failed to download Google Font: ${fontUrl}`, error.message);
                             this.debugReport.failedDownloads++;
                             this.failedAssets.push({ type: 'google-font', url: fontUrl, error: error.message });
                         }
@@ -1264,9 +1264,9 @@ class WebsiteCloner {
                     await fs.writeFile(path.join(outputDir, localCSSPath), googleFontsCSS, 'utf8');
                     link.attr('href', localCSSPath);
                     
-                    console.log('🔤 Google Fonts converted to local files');
+                    console.log(' Google Fonts converted to local files');
                 } catch (error) {
-                    console.log(`⚠️ Failed to process Google Fonts: ${href}`, error.message);
+                    console.log(`Failed to process Google Fonts: ${href}`, error.message);
                     this.debugReport.failedDownloads++;
                     this.failedAssets.push({ type: 'google-fonts', url: href, error: error.message });
                 }
@@ -1322,7 +1322,7 @@ class WebsiteCloner {
             this.downloadedAssets.add(url);
             
         } catch (error) {
-            console.log(`⚠️ Failed to download: ${url}`, error.message);
+            console.log(` Failed to download: ${url}`, error.message);
             
             // Enhanced error logging
             if (error.response) {
@@ -1465,7 +1465,7 @@ class WebsiteCloner {
                         // Avoid duplicates
                         if (!detectedInfo.hotelNames.includes(text)) {
                             detectedInfo.hotelNames.push(text);
-                            console.log('🏨 Found hotel name:', text);
+                            console.log(' Found hotel name:', text);
                         }
                     }
                 }
@@ -1485,7 +1485,7 @@ class WebsiteCloner {
                     // Avoid duplicates and very long texts
                     if (!detectedInfo.addresses.includes(text)) {
                         detectedInfo.addresses.push(text);
-                        console.log('📍 Found address:', text);
+                        console.log(' Found address:', text);
                     }
                 }
             });
@@ -1505,7 +1505,7 @@ class WebsiteCloner {
                     // Avoid duplicates and very long texts
                     if (!detectedInfo.phoneNumbers.includes(text)) {
                         detectedInfo.phoneNumbers.push(text);
-                        console.log('📞 Found phone:', text);
+                        console.log(' Found phone:', text);
                     }
                 }
             });
@@ -1517,7 +1517,7 @@ class WebsiteCloner {
             const phone = href.replace(/^(tel:|callto:)/, '');
             if (this.isPhoneNumber(phone) && !detectedInfo.phoneNumbers.includes(phone)) {
                 detectedInfo.phoneNumbers.push(phone);
-                console.log('📞 Found phone from href:', phone);
+                console.log(' Found phone from href:', phone);
             }
         });
 
@@ -1535,7 +1535,7 @@ class WebsiteCloner {
                     // Avoid duplicates
                     if (!detectedInfo.emails.includes(text)) {
                         detectedInfo.emails.push(text);
-                        console.log('📧 Found email:', text);
+                        console.log(' Found email:', text);
                     }
                 }
             });
@@ -1547,7 +1547,7 @@ class WebsiteCloner {
             const email = href.replace(/^mailto:/, '');
             if (email.includes('@') && !detectedInfo.emails.includes(email)) {
                 detectedInfo.emails.push(email);
-                console.log('📧 Found email from href:', email);
+                console.log(' Found email from href:', email);
             }
         });
 
@@ -1604,7 +1604,7 @@ class WebsiteCloner {
      * with smart, context-aware, and logged replacements.
      */
     injectHotelData($, hotelData) {
-        console.log('🏨 Injecting hotel data (aggressive version)...');
+        console.log(' Injecting hotel data (aggressive version)...');
         const log = { replaced: [], warnings: [] };
 
         // Helper: log replacements
@@ -1637,11 +1637,11 @@ class WebsiteCloner {
                 const flexiblePattern = escapedStr.replace(/\\s/g, '\\s+'); // Make spaces flexible
                 const fullAddressRegex = new RegExp(flexiblePattern, 'gi');
                 
-                console.log(`🔧 Creating address regex for: "${str}"`);
-                console.log(`🔧 Escaped string: "${escapedStr}"`);
-                console.log(`🔧 Normalized string: "${normalizedStr}"`);
-                console.log(`🔧 Flexible pattern: "${flexiblePattern}"`);
-                console.log(`🔧 Full regex: ${fullAddressRegex.source}`);
+                console.log(` Creating address regex for: "${str}"`);
+                console.log(` Escaped string: "${escapedStr}"`);
+                console.log(` Normalized string: "${normalizedStr}"`);
+                console.log(` Flexible pattern: "${flexiblePattern}"`);
+                console.log(` Full regex: ${fullAddressRegex.source}`);
                 
                 // Create a more comprehensive partial regex that can match address segments
                 // Split the address into meaningful parts and create patterns for each
@@ -1713,7 +1713,7 @@ class WebsiteCloner {
         }
 
         // Improved address detection function
-                function detectAddress() {
+            function detectAddress() {
             // First try to get from hotelData
             if (hotelData.oldAddress) return hotelData.oldAddress;
             
@@ -1745,7 +1745,7 @@ class WebsiteCloner {
                         pattern.lastIndex = 0; // Reset regex state
                         const match = pattern.exec(text);
                         if (match && match[0] && match[0].length > 15) {
-                            console.log(`📍 Address detected in ${selector}: "${match[0]}"`);
+                            console.log(` Address detected in ${selector}: "${match[0]}"`);
                             detectedAddress = match[0].trim();
                             return false; // Break out of .each() loop
                         }
@@ -1812,12 +1812,12 @@ class WebsiteCloner {
             });
             
             if (addressNodes.length > 0) {
-                console.log(`📍 Found ${addressNodes.length} text nodes with address-like content:`);
+                console.log(` Found ${addressNodes.length} text nodes with address-like content:`);
                 addressNodes.forEach((node, index) => {
                     console.log(`   ${index + 1}. [${node.parent}] (${node.length} chars): "${node.text}"`);
                 });
             } else {
-                console.log(`⚠️ No address-like content found in the document`);
+                console.log(` No address-like content found in the document`);
             }
             
             return addressNodes;
@@ -1825,15 +1825,15 @@ class WebsiteCloner {
 
         // Log the generated regexes for debugging
         if (addressRegex) {
-            console.log(`🔍 Address regex created:`);
-            console.log(`   Full regex: ${addressRegex.full}`);
-            console.log(`   Partial regex: ${addressRegex.partial}`);
-            console.log(`   Old address length: ${oldAddress ? oldAddress.length : 0} chars`);
-            console.log(`   New address length: ${hotelData.address ? hotelData.address.length : 0} chars`);
-            console.log(`📊 Old address: "${oldAddress}"`);
-            console.log(`📊 New address: "${hotelData.address}"`);
+            console.log(` Address regex created:`);
+            console.log(` Full regex: ${addressRegex.full}`);
+            console.log(` Partial regex: ${addressRegex.partial}`);
+            console.log(` Old address length: ${oldAddress ? oldAddress.length : 0} chars`);
+            console.log(` New address length: ${hotelData.address ? hotelData.address.length : 0} chars`);
+            console.log(` Old address: "${oldAddress}"`);
+            console.log(` New address: "${hotelData.address}"`);
         } else {
-            console.log(`⚠️ No address regex created - oldAddress is empty or invalid`);
+            console.log(` No address regex created - oldAddress is empty or invalid`);
             // Run debug scan if oldAddress is empty
             debugAddressContent();
         }
@@ -1842,25 +1842,25 @@ class WebsiteCloner {
         function replaceAddress(text, newAddress) {
             if (!addressRegex || !newAddress) return text;
             
-            console.log(`🔍 Address replacement attempt: "${text}" → "${newAddress}"`);
-            console.log(`📝 Text length: ${text.length}, contains newlines: ${text.includes('\n')}, contains \r: ${text.includes('\r')}`);
-            console.log(`📝 Text JSON: ${JSON.stringify(text)}`);
+            console.log(` Address replacement attempt: "${text}" → "${newAddress}"`);
+            console.log(` Text length: ${text.length}, contains newlines: ${text.includes('\n')}, contains \r: ${text.includes('\r')}`);
+            console.log(` Text JSON: ${JSON.stringify(text)}`);
             
             // First try to replace the full address
             if (addressRegex.full) {
-                console.log(`🔍 Full regex pattern: ${addressRegex.full.source}`);
-                console.log(`🔍 Full regex test result: ${addressRegex.full.test(text)}`);
+                console.log(` Full regex pattern: ${addressRegex.full.source}`);
+                console.log(` Full regex test result: ${addressRegex.full.test(text)}`);
                 const fullMatch = addressRegex.full.exec(text);
                 if (fullMatch) {
-                    console.log(`🔍 Full regex match: "${fullMatch[0]}"`);
+                    console.log(` Full regex match: "${fullMatch[0]}"`);
                 }
                 
                 const fullReplaced = text.replace(addressRegex.full, newAddress);
                 if (fullReplaced !== text) {
-                    console.log(`✅ Full address replacement: "${text}" → "${fullReplaced}"`);
+                    console.log(` Full address replacement: "${text}" → "${fullReplaced}"`);
                     return fullReplaced;
                 } else {
-                    console.log(`❌ Full regex did not match, trying alternative approaches`);
+                    console.log(` Full regex did not match, trying alternative approaches`);
                 }
             }
             
@@ -1889,22 +1889,22 @@ class WebsiteCloner {
             if (addressRegex.partial) {
                 const matches = text.match(addressRegex.partial);
                 if (matches && matches.length > 0) {
-                    console.log(`🔍 Partial matches found: ${matches.join(', ')}`);
+                    console.log(` Partial matches found: ${matches.join(', ')}`);
                     
                     // Calculate the total length of all matches
                     const totalMatchLength = matches.join(' ').length;
                     const textLength = text.length;
                     const matchPercentage = (totalMatchLength / textLength) * 100;
                     
-                    console.log(`📊 Match analysis: ${totalMatchLength} chars matched out of ${textLength} total (${matchPercentage.toFixed(1)}%)`);
+                    console.log(` Match analysis: ${totalMatchLength} chars matched out of ${textLength} total (${matchPercentage.toFixed(1)}%)`);
                     
                     // Only replace if we're matching a substantial portion (at least 30% of the text)
                     if (matchPercentage >= 30 && totalMatchLength >= 10) {
                         const partialReplaced = text.replace(addressRegex.partial, newAddress);
-                        console.log(`✅ Partial address replacement: "${text}" → "${partialReplaced}"`);
+                        console.log(` Partial address replacement: "${text}" → "${partialReplaced}"`);
                         return partialReplaced;
                     } else {
-                        console.log(`⚠️ Partial matches too small (${matchPercentage.toFixed(1)}% of text), skipping replacement`);
+                        console.log(` Partial matches too small (${matchPercentage.toFixed(1)}% of text), skipping replacement`);
                     }
                 }
             }
@@ -1912,20 +1912,20 @@ class WebsiteCloner {
             // Last resort: try to find any text that looks like an address and replace it
             if (text.length > 20 && (text.includes('Mah.') || text.includes('Sok.') || text.includes('Cad.') || 
                 text.includes('Street') || text.includes('Ave') || text.includes('Road'))) {
-                console.log(`🔍 Text contains address keywords, attempting manual replacement`);
+                console.log(` Text contains address keywords, attempting manual replacement`);
                 
                 // Split text into sentences and look for address-like sentences
                 const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 10);
                 for (const sentence of sentences) {
                     if (sentence.match(/(Mah\.|Sok\.|Cad\.|Street|Ave|Road|No:)/i)) {
                         const replaced = text.replace(sentence, newAddress);
-                        console.log(`✅ Manual address replacement: "${text}" → "${replaced}"`);
+                        console.log(` Manual address replacement: "${text}" → "${replaced}"`);
                         return replaced;
                     }
                 }
             }
             
-            console.log(`❌ No address replacement made for: "${text}"`);
+            console.log(` No address replacement made for: "${text}"`);
             return text;
         }
 
@@ -2071,14 +2071,14 @@ class WebsiteCloner {
 
         // Log summary
         if (log.replaced.length) {
-            console.log('🔄 Data injection replacements:');
+            console.log(' Data injection replacements:');
             log.replaced.forEach(r => console.log(`  [${r.type}] ${r.from} → ${r.to}`));
         }
         if (log.warnings.length) {
-            console.warn('⚠️ Data injection warnings:');
+            console.warn(' Data injection warnings:');
             log.warnings.forEach(w => console.warn(`  [${w.type}] Could not find/replace: ${w.value}`));
         }
-        console.log('✅ Hotel data injected (aggressive version)');
+        console.log(' Hotel data injected (aggressive version)');
     }
 
     /**
